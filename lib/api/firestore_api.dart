@@ -837,6 +837,7 @@ class FirestoreApi<T extends Object> {
     List<FieldPath>? mergeFields,
     String? collectionPathOverride,
     Transaction? transaction,
+    bool isOffline = false,
   }) async {
     assert(
       _isCollectionGroup == (collectionPathOverride != null),
@@ -939,10 +940,17 @@ class FirestoreApi<T extends Object> {
                       data: writeableAsJson,
                     ),
             );
-            await documentReference.set(
-              writeableAsJson,
-              setOptions,
-            );
+            if (isOffline) {
+              documentReference.set(
+                writeableAsJson,
+                setOptions,
+              );
+            } else {
+              await documentReference.set(
+                writeableAsJson,
+                setOptions,
+              );
+            }
           } else {
             _log.info(
               message: 'Setting data with transaction.set..',
@@ -1147,6 +1155,7 @@ class FirestoreApi<T extends Object> {
     TimestampType timestampType = TimestampType.updated,
     String? collectionPathOverride,
     Transaction? transaction,
+    bool isOffline = false,
   }) async {
     assert(
       _isCollectionGroup == (collectionPathOverride != null),
@@ -1237,7 +1246,11 @@ class FirestoreApi<T extends Object> {
                       data: writeableAsJson,
                     ),
             );
-            await documentReference.update(writeableAsJson);
+            if (isOffline) {
+              documentReference.update(writeableAsJson);
+            } else {
+              await documentReference.update(writeableAsJson);
+            }
           } else {
             _log.info(
               message: 'Updating data with transaction.update..',
@@ -1395,6 +1408,7 @@ class FirestoreApi<T extends Object> {
     WriteBatch? writeBatch,
     String? collectionPathOverride,
     Transaction? transaction,
+    bool isOffline = false,
   }) async {
     assert(
       _isCollectionGroup == (collectionPathOverride != null),
@@ -1459,7 +1473,11 @@ class FirestoreApi<T extends Object> {
             message: 'Deleting data with documentReference.delete..',
             sensitiveData: null,
           );
-          await documentReference.delete();
+          if (isOffline) {
+            documentReference.delete();
+          } else {
+            await documentReference.delete();
+          }
         } else {
           transaction.delete(findDocRef(id: documentReference.id));
         }
