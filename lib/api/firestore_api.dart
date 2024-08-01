@@ -945,6 +945,9 @@ class FirestoreApi<T extends Object> {
                 writeableAsJson,
                 setOptions,
               );
+              await Future.delayed(
+                const Duration(milliseconds: 1000),
+              );
             } else {
               await documentReference.set(
                 writeableAsJson,
@@ -1248,6 +1251,9 @@ class FirestoreApi<T extends Object> {
             );
             if (isOffline) {
               documentReference.update(writeableAsJson);
+              await Future.delayed(
+                const Duration(milliseconds: 1000),
+              );
             } else {
               await documentReference.update(writeableAsJson);
             }
@@ -1475,6 +1481,9 @@ class FirestoreApi<T extends Object> {
           );
           if (isOffline) {
             documentReference.delete();
+            await Future.delayed(
+              const Duration(milliseconds: 1000),
+            );
           } else {
             await documentReference.delete();
           }
